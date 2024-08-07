@@ -27,7 +27,7 @@ jobs:
         run: dotnet restore --locked-mode --packages packs opensky-to-basestation.sln
 
       - name: Build project
-        run: ./dotnet build
+        run: dotnet build
 
       - name: compress
         run: Compress-Archive . release.zip
