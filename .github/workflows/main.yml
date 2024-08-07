@@ -1,0 +1,39 @@
+name: .NET 8 CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+         NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: vradarserver/opensky-to-basestation.git
+          path: .
+          ref: master
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+          
+      - name: Restore dependencies
+        run: dotnet restore --locked-mode --packages packs opensky-to-basestation.sln
+
+      - name: Build project
+        run: ./dotnet build
+
+      - name: compress
+        run: Compress-Archive . release.zip
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: result
+          path:  D:/a/stl66/stl66/release.zip
